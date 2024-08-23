@@ -7,7 +7,6 @@ const HTMLPlugin = require('html-webpack-plugin')
 const Dotenv = require('dotenv-webpack');
 
 module.exports = {
-	target: 'web',
 	entry: './src/js/index.js',
 	output: {
 		filename: 'main.js',
@@ -17,12 +16,12 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.vue$/,
-				loader: 'vue-loader'
-			},
-			{
 				test: /\.js$/,
 				loader: 'babel-loader'
+			},
+			{
+				test: /\.vue$/,
+				loader: 'vue-loader'
 			},
 			{
 				test: /\.css$/,
@@ -41,15 +40,26 @@ module.exports = {
 		]
 	},
 	plugins: [
+		new HTMLPlugin({
+			template: './src/index.html',
+			filename: './index.html',
+		}),
 		new VueLoaderPlugin(),
-		new HTMLPlugin(),
 		new Dotenv({
-		  path: path.resolve(__dirname, '.env')
+			path: path.resolve(__dirname, '.env'),
+			safe: true
 		}),
 	],
 	resolve: { 
 		alias: { 
 			'vue': 'vue/dist/vue.js' 
 		} 
+	},
+	devServer: {
+		open: true,
+		hot: true,
+		static: {
+			directory: path.join(__dirname, './')
+		}
 	}
 }
